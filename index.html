@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="keywords" content="在线文本文字随机打乱器,文字打乱,文本打乱,文本操作工具,文本文字,随机打乱,内容文字,文字随机打乱,在线计算器,在线内容文字随机打乱">
+    <meta name="description" content="在线文本文字随机打乱器是一个在线的文本处理工具，可以随机打乱文字文本顺序.支持中英文以及去除空格等空白字符">
+    <title>在线文本文字随机打乱器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body, .page, .left, .right {
+            height: 100%;
+        }
+        .page {
+            display: flex;
+        }
+        .left {
+            width: 50%;
+            padding: 30px;
+        }
+        .right {
+            background: #f3f3f3;
+            flex: 1;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .text {
+            height: 50%;
+            width: 100%;
+            border: 1px solid #eee;
+            padding: 15px;
+            outline: none;
+            background: #fafafa;
+            border-radius: 10px;
+        }
+        .text:focus {
+            border-color: #1d60f3;
+        }
+        .btn {
+            background: #1d60f3;
+            color: #fff;
+            border: none;
+            outline: none;
+            padding: 10px 25px;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px #ccc;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            box-shadow: 0 2px 7px #aaa;
+        }
+        #notice {
+            display: inline;
+            font-size: 13px;
+            margin-left: 20px;
+        }
+    </style>
+    <script src="./clipboard.min.js"></script>
+</head>
+<body>
+<div class="page">
+    <div class="left">
+        <h1>在线文本文字随机打乱器</h1>
+        <textarea id="text" class="text" cols="30" rows="10" placeholder="在此输入要打乱的文本"></textarea>
+        <button class="btn" onclick="upsetWords()">直接打乱</button>
+        <button class="btn" onclick="upsetWords(1)">去掉换行符和空格再打乱文字</button>
+    </div>
+    <div class="right">
+        <h1>输出结果</h1>
+        <textarea id="result" class="text" cols="30" rows="10" placeholder="打乱的文本"></textarea>
+        <button class="btn copy" data-clipboard-target="#result">复制</button>
+        <div id="notice"></div>
+    </div>
+</div>
+
+<script>
+  function id(x){
+    return document.getElementById(x);
+  }
+  function randomsort(a, b) {
+    return Math.random()>.5 ? -1 : 1;
+    //用Math.random()函数生成0~1之间的随机数与0.5比较，返回-1或1
+  }
+
+  function upsetWords(y){
+    var text = id("text").value;
+    if(y===1){
+      text = text.replace(/[\s\n\r\t]/gi,'');
+    }
+    if(text.length>2){
+      var tmp = text.split('');
+      tmp.sort(randomsort);
+      var result = '';
+      for(var i=0;i<tmp.length;i++){
+        result += tmp[i];
+      }
+      id("result").value = result;
+    }
+  }
+
+  function $notice (message, type) {
+    var notice = document.getElementById('notice')
+    notice.innerHTML = message
+    notice.style.color = type === 'success' ? 'green' : 'red';
+    setTimeout(function () {
+      notice.innerHTML = ''
+    }, 3000)
+  }
+
+  var clipboard = new ClipboardJS('.copy');
+
+  clipboard.on('success', function(e) {
+    $notice('复制成功!', 'success')
+  });
+
+  clipboard.on('error', function(e) {
+    $notice('复制失败，请手动复制')
+  });
+</script>
+</body>
+</html>
